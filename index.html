@@ -5,22 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hello World</title>
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       height: 100vh;
-      margin: 0;
-      font-family: sans-serif;
       background: #f0f4f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
+
     h1 {
       font-size: 4rem;
       color: #2d3748;
+      margin-bottom: 12px;
     }
+
+    .user-info {
+      color: #718096;
+      font-size: 1rem;
+      margin-bottom: 32px;
+    }
+
+    .sign-out {
+      padding: 10px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .sign-out:hover { opacity: 0.85; }
   </style>
 </head>
 <body>
+
   <h1>Hello, World!</h1>
+  <p class="user-info" id="user-info"></p>
+  <button class="sign-out" onclick="signOut()">Sign Out</button>
+
+  <script>
+    // Redirect to login if not authenticated
+    const raw = sessionStorage.getItem('auth');
+    if (!raw) {
+      window.location.href = 'login.html';
+    } else {
+      const { provider, user } = JSON.parse(raw);
+      const label = user.name || user.email || 'Guest';
+      document.getElementById('user-info').textContent =
+        `Signed in as ${label} via ${provider}`;
+    }
+
+    function signOut() {
+      sessionStorage.removeItem('auth');
+      window.location.href = 'login.html';
+    }
+  </script>
+
 </body>
 </html>
